@@ -1,79 +1,34 @@
 # Prediction of Final Steel Temperature at a Steel Production Plant
 
-A machine learning model for predicting molten steel temperature during ladle treatment to optimize energy consumption in steelmaking.
+A machine learning model for predicting final molten steel temperature during ladle treatment in order to optimize energy consumption in steelmaking.
+
 
 ## Problem Statement
 
 ### Business Context
 
-The metallurgical plant processes approximately 100-ton steel batches in refractory-lined ladles before continuous casting. Electricity for graphite electrode arc heating constitutes 25-35% of secondary steelmaking costs, with optimal temperature control directly impacting profitability.
+The metallurgical plant processes ~100-ton steel batches in refractory-lined ladles before continuous casting. Electricity for graphite electrode arc heating accounts for 25-35% of secondary steelmaking costs. 
+Operators must maintain steel within a narrow temperature window (typically ±5–10°C). Lower temperature causes recycles and delays. Higher temperature leads to wasted energy and faster ladle wear. Current heuristic rules ('heat until safe') result in systematic overheating and unpredictable cycle times. Thus, precise heating within set time could minimize energy waste and therefore reduce production costs while ensuring quality for continuous casting.
 
-### Current Challenges
+Example Heat Cost: 300 kWh electricity at €0.08/kWh = €24 per heat. At 300 heats/month/furnace, 10% savings = €7.2K/month = €86K/year per furnace.
 
-- **Overheating**: Operators conservatively extend heating cycles → 8-12% excess energy consumption
-- **Undershooting**: Insufficient heating → recycles (reheating + 15-20 min delay) → production bottlenecks
-- **Variable heat loss**: Ladle brick wear, ambient conditions, idle times → unpredictable cooling rates
-- **Energy cost volatility**: Electricity prices fluctuate → need precise energy budgeting per heat
+### ML Objective
 
-### Financial Impact
+Predict the final steel temperature based on historical data from the steel melting process at a metallurgical plant in order to enable optimal heating trajectories and schedules, cutting cycle time and recycles.
 
-1°C RMSE improvement = €15K-25K annual savings per furnace (based on 300 heats/month, €0.08/kWh).
 
-### ML Value
+## Project Structure
 
-Replace heuristic "heat until safe" rules with predictive temperature trajectories, enabling:
+```
+steel_temperature/
+├── data/                                       # Data files (not included in repo)
+├── results/                                    # Model outputs and results
+├── main_steel_temperature_prediction.ipynb     # Main analysis notebook
+├── requirements.txt                            # Python dependencies
+├── .gitignore
+└── README.md
+```
 
-- Optimal heating schedules (reduce average cycle time 10-15%)
-- Dynamic energy allocation across furnaces
-- Reduced recycles (<2% vs current 5-7%)
-- CO₂ footprint reduction
-
-## Task
-
-Predict the final steel temperature based on historical data from the steel melting process at a metallurgical plant.
-
-## Results
-
-The best model for predicting the final steel temperature is **CatBoost Regressor** with the following characteristics:
-- **MAE on training dataset**: 5.61°C
-- **MAE on test dataset**: 6.1°C
-- **Model parameters**: iterations=981, learning_rate=0.044, l2_leaf_reg=0.67, depth=4
-
-Key factors influencing final steel temperature:
-1. Initial temperature of the alloy
-2. Total heating duration
-3. Production phase duration
-4. Power factor coefficient
-5. Wire material 1 volume
-6. Bulk material 6 volume
-
-## Quick Start
-
-1. Clone the repository
-2. Prepare virtual environment
-    Create virtual environment
-    ```bash 
-    python3 -m venv venv_bak
-    ```
-    Activate virtual environment
-    ```bash
-    source venv_bak/bin/activate
-    ```  # Linux/Mac
-
-    or
-
-    ```bash
-    .\venv_bak\Scripts\activate
-    ```   # Windows
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Download the data (see Data section) and place it in `./data` directory
-4. Run the Jupyter notebook:
-   ```bash
-   jupyter notebook main_steel_temperature_prediction.ipynb
-   ```
 
 ## Libraries
 
@@ -84,6 +39,7 @@ Key factors influencing final steel temperature:
 - **PyOD** - outlier detection (KNN)
 - **Optuna** - hyperparameter optimization
 - **CatBoost** - gradient boosting model
+
 
 ## Data
 
@@ -115,9 +71,40 @@ The data can be downloaded from the following sources and should be placed into 
 
 **Note**: The `key` column in all datasets contains the batch number. Multiple rows may have the same `key` value, indicating that the corresponding batch underwent several processing iterations.
 
+
+## Quick start
+
+1. Clone the repository
+2. Prepare virtual environment
+    Create virtual environment
+    ```bash 
+    python3 -m venv venv_steel
+    ```
+    Activate virtual environment
+    ```bash
+    source venv_steel/bin/activate
+    ```  # Linux/Mac
+
+    or
+
+    ```bash
+    .\venv_steel\Scripts\activate
+    ```   # Windows
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Download the data (see Data section) and place it in `./data` directory
+4. Run the Jupyter notebook:
+   Go to main_steel_temperature_prediction.ipynb, 
+   choose .venv_steel as kernel,
+   run jupiter notebook. 
+
+
 ## Approach
 
-1. **Exploratory Data Analysis (EDA)**: Understanding data structure, distributions, and relationships
+1. **Exploratory Data Analysis (EDA)**: 
+   - Understanding data structure, distributions, and relationships
 2. **Data Preprocessing**:
    - Duplicate detection and removal
    - Outlier detection and handling
@@ -126,31 +113,37 @@ The data can be downloaded from the following sources and should be placed into 
 3. **Feature Engineering**:
    - Aggregating data per batch (initial temperature, production stage data, final temperature)
    - Creating derived features (power factor, apparent power, work)
-4. **Multicollinearity Analysis**: Identifying and removing highly correlated features
+4. **Multicollinearity Analysis**: 
+   - Identifying and removing highly correlated features
 5. **Model Training and Selection**:
    - Ridge Regression (linear model with regularization)
    - CatBoost Regressor (gradient boosting)
    - Hyperparameter optimization with Optuna
-6. **Model Evaluation**: Cross-validation and test set evaluation using MAE metric
+6. **Model Evaluation**: 
+   - Cross-validation and test set evaluation using MAE metric.
 
-## Project Structure
 
-```
-steel_temperature/
-├── data/                    # Data files (not included in repo)
-├── results/                 # Model outputs and results
-├── main_steel_temperature_prediction.ipynb  # Main analysis notebook
-├── requirements.txt         # Python dependencies
-├── .gitignore
-└── README.md
-```
+## Results
 
-## Environment Variables
+Model's test MAE is 6.0°C: predictions are off by 6.0°C on average.
 
-The project uses environment variables for configuration:
+From dataset analysis temperature standart error is 17.7°C* for rule-based heats
+Thus, using model for heating strategy could lead to 66% temperature error reduction 
+and business effect of production cost reduction of 487.8K€/year:
 
-- `DATA_DIR` - Path to data directory (default: `./data`)
-- `RESULTS_DIR` - Path to results directory (default: `./results`)
+100-ton ladle × 0.68 kWh/ton/°C = 68 kWh/°C/batch
+68 kWh × 0.07 €/kWh = 4.76 €/°C/batch
+4.76 €/°C/batch × (17.7 - 6) °C = 55.69 €/batch
+55.69 €/batch × 26 batches/day** × 365 days/year = 487.8K€/year
+
+*Average positive temperature difference from target (1600°C): 17.69
+**Average number of unique keys per day: 25.74
+
+
+## Futher improvements
+The project is done for educational purposes only. For production deployment, more complex model architectures should be used to implement dynamic optimization instead of static temperature prediction. For example:
+- Model Predictive Control (MPC) using fitted Ridge/CatBoost model as base predictor, optimizing real-time electrode power trajectories every 30 seconds;
+- Ensemble with Online Learning combining Ridge (fast baseline), CatBoost (feature interactions), and LSTM (temporal dynamics) with weekly retraining.
 
 
 ## Author

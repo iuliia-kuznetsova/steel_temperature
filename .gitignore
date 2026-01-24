@@ -1,3 +1,18 @@
+# Virtual environments
+.venv*/
+venv*/
+.venv_steel/
+**/__pycache__/
+
+# CatBoost models and info files
+catboost_info/
+*.cbm
+*.catboost
+models/
+checkpoints/
+
+# Data (for portfolio repo)
+data/raw/
+data/processed/
 *.csv
-.venv/
-.gitignore
+*.parquet

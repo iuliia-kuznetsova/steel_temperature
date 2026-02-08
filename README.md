@@ -22,13 +22,22 @@ Predict the final steel temperature based on historical data from the steel melt
 
 ```
 steel_temperature/
+├── catboost_info/                              # CatBoost training logs (auto-generated)
 ├── venv_steel/                                 # Virtual environment (not included in repo)
 ├── data/                                       # Data files (not included in repo)
-├── results/                                    # Model outputs and results
+│   ├── data_arc_new.csv
+│   ├── data_bulk_new.csv
+│   ├── data_bulk_time_new.csv
+│   ├── data_gas_new.csv
+│   ├── data_temp_new.csv
+│   ├── data_wire_new.csv
+│   └── data_wire_time_new.csv
+├── .gitignore                                  # List of excluded from repo files
+├── .env                                        # Environment variables (not included in repo)
 ├── main_steel_temperature_prediction.ipynb     # Main analysis notebook
-├── requirements.txt                            # Python dependencies
-├── .gitignore
-└── README.md
+├── project_description.txt                     # Short project description
+├── README.md
+└── requirements.txt                            # Python dependencies
 ```
 
 

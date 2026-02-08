@@ -1,6 +1,7 @@
 # Prediction of Final Steel Temperature at a Steel Production Plant
 
-A machine learning model for predicting final molten steel temperature during ladle treatment in order to optimize energy consumption in steelmaking.
+Build a model to predict **final molten steel temperature** during ladle treatment in order to **optimize energy consumption in steelmaking**.
+As a result using the best model (tuned CatBoost Regressor with 6.0°C test MAE) for heating strategy could lead to **66% temperature error reduction** comparing with rule-based heats, causing the business effect of production cost reduction of 487.8K€/year.
 
 
 ## Problem Statement
@@ -21,6 +22,7 @@ Predict the final steel temperature based on historical data from the steel melt
 
 ```
 steel_temperature/
+├── venv_steel/                                 # Virtual environment (not included in repo)
 ├── data/                                       # Data files (not included in repo)
 ├── results/                                    # Model outputs and results
 ├── main_steel_temperature_prediction.ipynb     # Main analysis notebook
@@ -75,50 +77,76 @@ The data can be downloaded from the following sources and should be placed into 
 ## Quick start
 
 1. Clone the repository
-2. Prepare virtual environment
-    Create virtual environment
-    ```bash 
-    python3 -m venv venv_steel
-    ```
-    Activate virtual environment
-    ```bash
-    source venv_steel/bin/activate
-    ```  # Linux/Mac
+```bash
+git clone <your-repo-url>
+cd promo_uplift
+```
 
-    or
+2. Prepare a virtual environment
 
-    ```bash
-    .\venv_steel\Scripts\activate
-    ```   # Windows
+Create environment:
+```bash
+python -m venv .venv_steel
+```
+
+Activate environment:
+```bash
+source .venv_steel/bin/activate
+``` 
+*(Linux/Mac)*
+
+or
+
+```bash
+.\.venv_steel\Scripts\activate
+```
+*(Windows)*
+
 3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Download the data (see Data section) and place it in `./data` directory
-4. Run the Jupyter notebook:
-   Go to main_steel_temperature_prediction.ipynb, 
-   choose .venv_steel as kernel,
-   run jupiter notebook. 
+```bash
+pip install -r requirements.txt
+```
+
+4. Download the data (see **Data**) and place it into `./data`
+
+6. Run the Jupyter notebook
+- Open `main_steel_temperature_prediction.ipynb`
+- Select kernel **Python (.venv_steel)**
+- Run all cells
+
+7. Stopping services
+```bash
+# Stop virtual environment
+deactivate
+
+# Stop MLflow server
+# (Ctrl+C in the terminal where MLflow is running)
+```
 
 
 ## Approach
 
 1. **Exploratory Data Analysis (EDA)**: 
-   - Understanding data structure, distributions, and relationships
+   - Understanding data structure, distributions, and relationships.
+
 2. **Data Preprocessing**:
-   - Duplicate detection and removal
-   - Outlier detection and handling
-   - Missing value treatment
-   - Data type corrections
+   - Duplicate detection and removal;
+   - Outlier detection and handling;
+   - Missing value treatment;
+   - Data type corrections.
+
 3. **Feature Engineering**:
-   - Aggregating data per batch (initial temperature, production stage data, final temperature)
-   - Creating derived features (power factor, apparent power, work)
+   - Aggregating data per batch (initial temperature, production stage data, final temperature);
+   - Creating derived features (power factor, apparent power, work).
+
 4. **Multicollinearity Analysis**: 
-   - Identifying and removing highly correlated features
+   - Identifying and removing highly correlated features.
+
 5. **Model Training and Selection**:
-   - Ridge Regression (linear model with regularization)
-   - CatBoost Regressor (gradient boosting)
-   - Hyperparameter optimization with Optuna
+   - Ridge Regression (linear model with regularization);
+   - CatBoost Regressor (gradient boosting);
+   - Hyperparameter optimization with Optuna.
+
 6. **Model Evaluation**: 
    - Cross-validation and test set evaluation using MAE metric.
 
@@ -142,11 +170,10 @@ and business effect of production cost reduction of 487.8K€/year:
 
 ## Futher improvements
 The project is done for educational purposes only. For production deployment, more complex model architectures should be used to implement dynamic optimization instead of static temperature prediction. For example:
-- Model Predictive Control (MPC) using fitted Ridge/CatBoost model as base predictor, optimizing real-time electrode power trajectories every 30 seconds;
-- Ensemble with Online Learning combining Ridge (fast baseline), CatBoost (feature interactions), and LSTM (temporal dynamics) with weekly retraining.
+- **Model Predictive Control (MPC)** using fitted Ridge/CatBoost model as base predictor, optimizing real-time electrode power trajectories every 30 seconds;
+- **Model Ensembling** with Online Learning combining Ridge (fast baseline), CatBoost (feature interactions), and LSTM (temporal dynamics) with weekly retraining.
 
 
 ## Author
-
 **Iuliia Kuznetsova**  
 January 2024

@@ -1,6 +1,6 @@
 Steel Temperature Prediction for Energy Optimization
 
-Developed a machine learning solution to predict final molten steel temperature during ladle treatment at a metallurgical plant. 
+Developed a data science solution to predict final molten steel temperature during ladle treatment at a metallurgical plant. 
 The project addresses a critical challenge in secondary steelmaking, where electricity for arc heating accounts for 25-35% of production costs.
 
 Based on historical data from the steel melting process I've built and tuned a CatBoost Regressor achieving 6.0°C test MAE, that

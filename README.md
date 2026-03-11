@@ -1,5 +1,5 @@
 # Prediction of Final Steel Temperature at a Steel Production Plant
-Mmodel that predicts **final molten steel temperature** during ladle treatment in order to **optimize energy consumption in steelmaking**.
+Model that predicts **final molten steel temperature** during ladle treatment in order to **optimize energy consumption in steelmaking**.
 As a result using the best model (tuned CatBoost Regressor with 6.0°C test MAE) for heating strategy could lead to **66% temperature error reduction** comparing with rule-based heats, causing the business effect of production cost reduction of 487.8K€/year.
 
 
